@@ -3,24 +3,24 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\DepartmentResource\Pages;
-use App\Filament\Resources\DepartmentResource\RelationManagers;
+use App\Filament\Resources\DepartmentResource\RelationManagers\EmployeesRelationManager;
 use App\Models\Department;
-use Filament\Forms;
+use Filament\Forms\Components\Card;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Card;
-use Filament\Forms\Components\Select;
 
 class DepartmentResource extends Resource
 {
     protected static ?string $model = Department::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-user-circle';
+
+    protected static ?string $navigationGroup = 'System Management';
+
+    protected static ?int $navigationSort = 4;
 
     public static function form(Form $form): Form
     {
@@ -28,10 +28,12 @@ class DepartmentResource extends Resource
             ->schema([
                 Card::make()
                     ->schema([
-                        TextInput::make('name'),
-                    ])
+                        TextInput::make('name')
+                            ->required()
+                            ->maxLength(255),
+                    ]),
             ]);
-            
+
     }
 
     public static function table(Table $table): Table
@@ -39,11 +41,11 @@ class DepartmentResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')
-                ->sortable(),
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('name')
-                ->searchable()
-                ->sortable(),
+                    ->searchable()
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('created_at'),
             ])
@@ -57,14 +59,14 @@ class DepartmentResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
-            //
+            EmployeesRelationManager::class,
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -72,5 +74,5 @@ class DepartmentResource extends Resource
             'create' => Pages\CreateDepartment::route('/create'),
             'edit' => Pages\EditDepartment::route('/{record}/edit'),
         ];
-    }    
+    }
 }

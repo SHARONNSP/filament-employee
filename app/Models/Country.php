@@ -11,7 +11,6 @@ class Country extends Model
 
     protected $fillable = ['country_code', 'name'];
 
-
     public function employees()
     {
         return $this->hasMany(Employee::class);

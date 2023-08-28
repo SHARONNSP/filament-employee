@@ -11,12 +11,10 @@ class City extends Model
 
     protected $fillable = ['state_id', 'name'];
 
-
     public function state()
     {
         return $this->belongsTo(State::class);
     }
-
 
     public function employees()
     {
